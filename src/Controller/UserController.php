@@ -24,4 +24,20 @@ class UserController extends AbstractController
             ['groups' => 'user_info']
         );
     }
+
+    /**
+     * @Route("/clients/{clientId}/users/{id}", name="show_users")
+     */
+    public function showUser(UserRepository $userRepository, $clientId, $id): Response
+    {
+        return $this->json(
+            $userRepository->findOneBy([
+                'client' => $clientId,
+                'id' => $id
+                ]),
+            200,
+            [],
+            ['groups' => 'user_info']
+        );
+    }
 }
