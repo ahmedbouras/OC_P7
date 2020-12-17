@@ -2,10 +2,14 @@
 
 namespace App\Controller;
 
+use App\Entity\Client;
+use App\Entity\User;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * @Route("/api", name="api_")
@@ -52,5 +56,25 @@ class UserController extends AbstractController
         $em->flush();
 
         return $this->json(null, 204);
+    }
+
+    /**
+     * @Route("/clients/{id}/users", name="add_user", methods={"POST"})
+     */
+    public function addUser(Request $request, Client $client, SerializerInterface $serializer)
+    {
+        $user = new User();
+        $jsonData = $request->getContent();
+        $user = $serializer->deserialize($jsonData, User::class, 'json');
+        $user->setClient($client);
+
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($user);
+            $em->flush();
+            return $this->json('', 201);
+        } catch (\Exception $e) {
+            return $this->json('', 400);
+        }
     }
 }
