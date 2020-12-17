@@ -40,4 +40,17 @@ class UserController extends AbstractController
             ['groups' => 'user_info']
         );
     }
+
+    /**
+     * @Route("/clients/{clientId}/users/{id}", name="delete_user", methods={"DELETE"})
+     */
+    public function deleteUser(UserRepository $userRepository, $clientId, $id)
+    {
+        $user = $userRepository->findOneBy(['client' => $clientId,'id' => $id]);
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($user);
+        $em->flush();
+
+        return $this->json(null, 204);
+    }
 }
