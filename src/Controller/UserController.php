@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class UserController extends AbstractController
 {
     /**
-     * @Route("/clients/{clientId}/users", name="show_users")
+     * @Route("/clients/{clientId}/users", name="show_users", methods={"GET"})
      */
     public function showUsers(UserRepository $userRepository, $clientId): Response
     {
@@ -26,7 +26,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/clients/{clientId}/users/{id}", name="show_users")
+     * @Route("/clients/{clientId}/users/{id}", name="show_user", methods={"GET"})
      */
     public function showUser(UserRepository $userRepository, $clientId, $id): Response
     {
