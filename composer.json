@@ -16,6 +16,8 @@
         "symfony/yaml": "4.4.*"
     },
     "require-dev": {
+        "doctrine/doctrine-fixtures-bundle": "^3.4",
+        "fakerphp/faker": "^1.12",
         "symfony/maker-bundle": "^1.25"
     },
     "config": {
