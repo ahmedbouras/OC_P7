@@ -4,76 +4,94 @@ namespace App\Controller;
 
 use App\Entity\Client;
 use App\Entity\User;
+use App\Repository\ClientRepository;
 use App\Repository\UserRepository;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use FOS\RestBundle\Controller\Annotations as Rest;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class UserController extends AbstractFOSRestController
 {
     /**
      * @Rest\Get(
      *      path="/clients/{clientId}/users",
-     *      name="show_users"
+     *      name="list_users",
+     *      requirements={"clientId"="\d+"}
      * )
      * @Rest\View(
      *      statusCode=200
      * )
      */
-    public function showAction(UserRepository $userRepository, $clientId)
+    public function listAction(UserRepository $userRepository, $clientId)
     {
         $users = $userRepository->findBy(['client' => $clientId]);
         return $users;
     }
 
-    // /**
-    //  * @Route("/clients/{clientId}/users/{id}", name="show_user", methods={"GET"})
-    //  */
-    // public function showUser(UserRepository $userRepository, $clientId, $id): Response
-    // {
-    //     return $this->json(
-    //         $userRepository->findOneBy([
-    //             'client' => $clientId,
-    //             'id' => $id
-    //             ]),
-    //         200,
-    //         [],
-    //         ['groups' => 'user_info']
-    //     );
-    // }
+    /**
+     * @Rest\Get(
+     *      path="/clients/{clientId}/users/{id}",
+     *      name="show_user",
+     *      requirements={"clientId"="\d+", "id"="\d+"}
+     * )
+     * @Rest\View(
+     *      statusCode=200
+     * )
+     */
+    public function showAction(UserRepository $userRepository, $clientId, $id)
+    {
+        $user = $userRepository->findOneBy(['client' => $clientId, 'id' => $id]);
+        return $user;
+    }
 
-    // /**
-    //  * @Route("/clients/{clientId}/users/{id}", name="delete_user", methods={"DELETE"})
-    //  */
-    // public function deleteUser(UserRepository $userRepository, $clientId, $id)
-    // {
-    //     $user = $userRepository->findOneBy(['client' => $clientId,'id' => $id]);
-    //     $em = $this->getDoctrine()->getManager();
-    //     $em->remove($user);
-    //     $em->flush();
+    /**
+     * @Rest\Delete(
+     *      path="/clients/{clientId}/users/{id}",
+     *      name="delete_user",
+     *      requirements={"clientId"="\d+", "id"="\d+"}
+     * )
+     * @Rest\View(
+     *      statusCode=204
+     * )
+     */
+    public function deleteAction(UserRepository $userRepository, $clientId, $id)
+    {
+        $user = $userRepository->findOneBy(['client' => $clientId,'id' => $id]);
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($user);
+        $em->flush();
+    }
 
-    //     return $this->json(null, 204);
-    // }
+    /**
+     * @Rest\Post(
+     *      path="/clients/{id}/users",
+     *      name="create_user",
+     *      requirements={"id"="\d+"}
+     * )
+     * @Rest\View(
+     *      statusCode=201
+     * )
+     * @ParamConverter("user", converter="fos_rest.request_body")
+     */
+    public function createAction(User $user, ClientRepository $clientRepository, $id)
+    {
+        $client = $clientRepository->findOneBy(['id' => $id]);
+        if ($client) {
+            $user->setClient($client);
 
-    // /**
-    //  * @Route("/clients/{id}/users", name="add_user", methods={"POST"})
-    //  */
-    // public function addUser(Request $request, Client $client, SerializerInterface $serializer)
-    // {
-    //     $user = new User();
-    //     $jsonData = $request->getContent();
-    //     $user = $serializer->deserialize($jsonData, User::class, 'json');
-    //     $user->setClient($client);
-
-    //     try {
-    //         $em = $this->getDoctrine()->getManager();
-    //         $em->persist($user);
-    //         $em->flush();
-    //         return $this->json('', 201);
-    //     } catch (\Exception $e) {
-    //         return $this->json('', 400);
-    //     }
-    // }
+            try {
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($user);
+                $em->flush();
+                return $user;
+            } catch (\Exception $e) {
+                return $this->json('Erreur bdd', 400);
+            }
+        } else {
+            return $this->json('client inconnu', 404);
+        }
+    }
 }
