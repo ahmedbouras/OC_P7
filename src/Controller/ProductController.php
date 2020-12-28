@@ -14,9 +14,7 @@ class ProductController extends AbstractFOSRestController
      *      path="/products", 
      *      name="list_products"
      * )
-     * @Rest\View(
-     *      statusCode=200
-     * )
+     * @Rest\View(statusCode=200)
      */
     public function listAction(ProductRepository $productRepository)
     {
@@ -30,9 +28,7 @@ class ProductController extends AbstractFOSRestController
      *      name="show_product",
      *      requirements={"id"="\d+"}
      * )
-     * @Rest\View(
-     *      statusCode=200
-     * )
+     * @Rest\View(statusCode=200)
      */
     public function showAction(Product $product)
     {
