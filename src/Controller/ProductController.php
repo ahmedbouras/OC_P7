@@ -2,29 +2,40 @@
 
 namespace App\Controller;
 
+use App\Entity\Product;
 use App\Repository\ProductRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use FOS\RestBundle\Controller\Annotations as Rest;
+use FOS\RestBundle\Controller\AbstractFOSRestController;
 
-/**
- * @Route("/api", name="api_")
- */
-class ProductController extends AbstractController
+class ProductController extends AbstractFOSRestController
 {
     /**
-     * @Route("/products", name="show_products", methods={"GET"})
+     * @Rest\Get(
+     *      path="/products", 
+     *      name="list_products"
+     * )
+     * @Rest\View(
+     *      statusCode=200
+     * )
      */
-    public function showProducts(ProductRepository $productRepository): Response
+    public function listAction(ProductRepository $productRepository)
     {
-        return $this->json($productRepository->findAll(), 200);
+        $articles = $productRepository->findAll();
+        return $articles;
     }
 
     /**
-     * @Route("/products/{id}", name="show_product", methods={"GET"})
+     * @Rest\Get(
+     *      path="/products/{id}",
+     *      name="show_product",
+     *      requirements={"id"="\d+"}
+     * )
+     * @Rest\View(
+     *      statusCode=200
+     * )
      */
-    public function showProduct(ProductRepository $productRepository, $id): Response
+    public function showAction(Product $product)
     {
-        return $this->json($productRepository->findOneBy(['id' => $id]), 200);
+        return $product;
     }
 }
