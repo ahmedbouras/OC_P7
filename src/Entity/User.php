@@ -5,10 +5,25 @@ namespace App\Entity;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
+use Hateoas\Configuration\Annotation as Hateoas;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @Serializer\ExclusionPolicy("ALL")
+ * @Hateoas\Relation(
+ *      "self",
+ *      href = @Hateoas\Route(
+ *          "show_user",
+ *          parameters = { "id" = "expr(object.getId())", "clientId" = "expr(object.getClient().id)" }
+ *      )
+ * )
+ * @Hateoas\Relation(
+ *      "delete",
+ *      href = @Hateoas\Route(
+ *          "delete_user",
+ *          parameters = { "id" = "expr(object.getId())", "clientId" = "expr(object.getClient().id)" }
+ *      )
+ * )
  */
 class User
 {
@@ -40,6 +55,7 @@ class User
 
     /**
      * @ORM\ManyToOne(targetEntity=Client::class, inversedBy="users")
+     * @ORM\JoinColumn(nullable=true)
      */
     private $client;
 
