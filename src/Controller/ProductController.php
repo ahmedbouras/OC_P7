@@ -14,10 +14,10 @@ class ProductController extends AbstractFOSRestController
     /**
      * @Rest\Get("/products", name="list_products")
      * @Rest\QueryParam(
-     *      name="offset",
+     *      name="page",
      *      requirements="\d+",
-     *      default="0",
-     *      description="The pagination offset."
+     *      default="1",
+     *      description="The page number."
      * )
      * @Rest\QueryParam(
      *      name="limit",
@@ -36,7 +36,7 @@ class ProductController extends AbstractFOSRestController
     public function listAction(ParamFetcherInterface $paramFetcher, ProductRepository $productRepository)
     {
         $pager = $productRepository->search(
-            $paramFetcher->get('offset'),
+            $paramFetcher->get('page'),
             $paramFetcher->get('limit'),
             $paramFetcher->get('order')
         );

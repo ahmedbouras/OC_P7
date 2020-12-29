@@ -13,10 +13,9 @@ class Products
     {
         $this->data = $data->getCurrentPageResults();
 
-        $this->addMeta('limit', $data->getMaxPerPage());
         $this->addMeta('current_items', count($data->getCurrentPageResults()));
-        $this->addMeta('total_items', $data->getNbResults());
-        $this->addMeta('offset', $data->getCurrentPageOffsetStart());
+        $this->addMeta('actual_page', $data->getCurrentPage());
+        $this->addMeta('number_of_page', $data->getNbPages());
     }
 
 

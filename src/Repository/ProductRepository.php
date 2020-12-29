@@ -22,13 +22,13 @@ class ProductRepository extends ServiceEntityRepository
         parent::__construct($registry, Product::class);
     }
 
-    public function search($offset = 1, $limit = 10, $order)
+    public function search($page, $limit, $order)
     {
         $qb = $this->createQueryBuilder('p')
             ->select('p')
             ->orderBy('p.id', $order);
 
-        return $this->paginate($qb, $offset, $limit);
+        return $this->paginate($qb, $page, $limit);
     }
 
     // /**
