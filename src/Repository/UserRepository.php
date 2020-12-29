@@ -3,8 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\User;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Repository\AbstractRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method User|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,9 +15,22 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class UserRepository extends ServiceEntityRepository
 {
+    use AbstractRepository;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, User::class);
+    }
+
+    public function search($page, $limit, $order, $clientId)
+    {
+        $qb = $this->createQueryBuilder('u')
+            ->select('u')
+            ->where('u.client = ?0')
+            ->setParameter(0, $clientId)
+            ->orderBy('u.id', $order);
+
+        return $this->paginate($qb, $page, $limit);
     }
 
     // /**

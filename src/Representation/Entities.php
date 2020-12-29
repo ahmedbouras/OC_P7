@@ -4,7 +4,7 @@ namespace App\Representation;
 
 use Pagerfanta\Pagerfanta;
 
-class Products
+class Entities
 {
     public $data;
     public $meta;

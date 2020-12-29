@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Product;
 use App\Repository\ProductRepository;
-use App\Representation\Products;
+use App\Representation\Entities;
 use FOS\RestBundle\Request\ParamFetcherInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
@@ -40,9 +40,7 @@ class ProductController extends AbstractFOSRestController
             $paramFetcher->get('limit'),
             $paramFetcher->get('order')
         );
-        return new Products($pager);
-        // $articles = $productRepository->findAll();
-        // return $articles;
+        return new Entities($pager);
     }
 
     /**
