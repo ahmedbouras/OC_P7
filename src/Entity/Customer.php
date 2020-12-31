@@ -48,7 +48,28 @@ class Customer
      * )
      * @Serializer\Expose
      */
-    private $name;
+    private $firstname;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     * @Assert\NotNull(message="Ce champ ne doit pas être null.")
+     * @Assert\NotBlank(message="Ce champ ne doit pas être vide.")
+     * @Assert\Length(
+     *      min = 2,
+     *      max = 20,
+     *      minMessage = "Le prénom doit comporter au minimum {{ limit }} caractères",
+     *      maxMessage = "Le prénom doit comporter au maximum {{ limit }} caractères"
+     * )
+     */
+    private $lastname;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     * @Assert\NotNull(message="Ce champ ne doit pas être null.")
+     * @Assert\NotBlank(message="Ce champ ne doit pas être vide.")
+     * @Assert\Email(message="Veuillez insérer un email valide")
+     */
+    private $email;
 
     /**
      * @ORM\ManyToOne(targetEntity=Company::class, inversedBy="customers")
@@ -60,14 +81,38 @@ class Customer
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getFirstname(): ?string
     {
-        return $this->name;
+        return $this->firstname;
     }
 
-    public function setName(string $name): self
+    public function setFirstname(string $firstname): self
     {
-        $this->name = $name;
+        $this->firstname = $firstname;
+
+        return $this;
+    }
+
+    public function getLastname(): ?string
+    {
+        return $this->lastname;
+    }
+
+    public function setLastname(string $lastname): self
+    {
+        $this->lastname = $lastname;
+
+        return $this;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): self
+    {
+        $this->email = $email;
 
         return $this;
     }

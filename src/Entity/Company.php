@@ -37,6 +37,26 @@ class Company implements UserInterface
     private $password;
 
     /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $name;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $siret;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $streetAddress;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $phoneNumber;
+
+    /**
      * @ORM\OneToMany(targetEntity=Customer::class, mappedBy="company")
      */
     private $customers;
@@ -122,6 +142,54 @@ class Company implements UserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getSiret(): ?string
+    {
+        return $this->siret;
+    }
+
+    public function setSiret(string $siret): self
+    {
+        $this->siret = $siret;
+
+        return $this;
+    }
+
+    public function getStreetAddress(): ?string
+    {
+        return $this->streetAddress;
+    }
+
+    public function setStreetAddress(string $streetAddress): self
+    {
+        $this->streetAddress = $streetAddress;
+
+        return $this;
+    }
+
+    public function getPhoneNumber(): ?string
+    {
+        return $this->phoneNumber;
+    }
+
+    public function setPhoneNumber(string $phoneNumber): self
+    {
+        $this->phoneNumber = $phoneNumber;
+
+        return $this;
     }
 
     /**

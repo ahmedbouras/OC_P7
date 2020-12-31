@@ -34,18 +34,18 @@ class AppFixtures extends Fixture
         for ($j = 0; $j < 5; $j++) { 
             $company = new Company();
             $company->setEmail($faker->safeEmail())
-                   ->setPassword($this->encoder->encodePassword($company, 'pass123'));
-                //    ->setName($faker->company())
-                //    ->setSiret($faker->siret())
-                //    ->setStreetAddress($faker->streetAddress())
-                //    ->setPhoneNumber($faker->phoneNumber());
+                   ->setPassword($this->encoder->encodePassword($company, 'pass123'))
+                   ->setName($faker->company())
+                   ->setSiret($faker->siret())
+                   ->setStreetAddress($faker->streetAddress())
+                   ->setPhoneNumber($faker->phoneNumber());
             $manager->persist($company);
 
             for ($k = 0; $k < 10; $k++) { 
                 $user = new Customer();
-                $user->setName($faker->firstname())
-                    //  ->setLastName($faker->lastname())
-                    //  ->setEmail($faker->safeEmail())
+                $user->setFirstname($faker->firstname())
+                     ->setLastname($faker->lastname())
+                     ->setEmail($faker->safeEmail())
                      ->setCompany($company);
                 $manager->persist($user);
             }
