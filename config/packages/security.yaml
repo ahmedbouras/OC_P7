@@ -11,6 +11,10 @@ security:
                 class: App\Entity\Company
                 property: email
     firewalls:
+        doc:
+            pattern: ^/api/doc
+            anonymous: true
+            
         login:
             pattern:  ^/api/login
             stateless: true
@@ -43,4 +47,5 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
          - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+         - { path: ^/api/doc, roles: IS_AUTHENTICATED_ANONYMOUSLY }
          - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
