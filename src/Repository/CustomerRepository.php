@@ -14,9 +14,22 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class CustomerRepository extends ServiceEntityRepository
 {
+    use AbstractRepository;
+    
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Customer::class);
+    }
+
+    public function search($page, $limit, $order, $clientId)
+    {
+        $qb = $this->createQueryBuilder('c')
+            ->select('c')
+            ->where('c.company = ?0')
+            ->setParameter(0, $clientId)
+            ->orderBy('c.id', $order);
+
+        return $this->paginate($qb, $page, $limit);
     }
 
     // /**

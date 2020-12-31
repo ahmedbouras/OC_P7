@@ -12,7 +12,7 @@ use Hateoas\Configuration\Annotation as Hateoas;
  * @Hateoas\Relation(
  *      "self",
  *      href = @Hateoas\Route(
- *          "show_product",
+ *          "api_show_product",
  *          parameters = { "id" = "expr(object.getId())" }
  *      )
  * )
