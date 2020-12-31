@@ -12,4 +12,5 @@ return [
     Bazinga\Bundle\HateoasBundle\BazingaHateoasBundle::class => ['all' => true],
     Symfony\Bundle\TwigBundle\TwigBundle::class => ['all' => true],
     BabDev\PagerfantaBundle\BabDevPagerfantaBundle::class => ['all' => true],
+    Symfony\Bundle\SecurityBundle\SecurityBundle::class => ['all' => true],
 ];
