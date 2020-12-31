@@ -57,9 +57,10 @@ class Customer
      * @Assert\Length(
      *      min = 2,
      *      max = 20,
-     *      minMessage = "Le prénom doit comporter au minimum {{ limit }} caractères",
-     *      maxMessage = "Le prénom doit comporter au maximum {{ limit }} caractères"
+     *      minMessage = "Le nom doit comporter au minimum {{ limit }} caractères",
+     *      maxMessage = "Le nom doit comporter au maximum {{ limit }} caractères"
      * )
+     * @Serializer\Expose
      */
     private $lastname;
 
@@ -68,6 +69,7 @@ class Customer
      * @Assert\NotNull(message="Ce champ ne doit pas être null.")
      * @Assert\NotBlank(message="Ce champ ne doit pas être vide.")
      * @Assert\Email(message="Veuillez insérer un email valide")
+     * @Serializer\Expose
      */
     private $email;
 
