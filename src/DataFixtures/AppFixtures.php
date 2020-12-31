@@ -11,7 +11,20 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class AppFixtures extends Fixture
 {
-    private $brands = ['iphone', 'samsung', 'huawei', 'oppo', 'xiaomi', 'oneplus'];
+    private $brands = [
+        'iphone', 
+        'samsung', 
+        'huawei', 
+        'oppo', 
+        'xiaomi', 
+        'oneplus', 
+        'lg', 
+        'htc', 
+        'motorola', 
+        'windows phone',
+        'nokia',
+        'lenovo'
+    ];
     private $encoder;
 
     public function __construct(UserPasswordEncoderInterface $encoder)
@@ -23,7 +36,7 @@ class AppFixtures extends Fixture
     {
         $faker = \Faker\Factory::create('fr_FR');
         
-        for ($i = 0; $i < 6; $i++) { 
+        for ($i = 0; $i < count($this->brands); $i++) { 
             $product = new Product();
             $product->setBrand($this->brands[$i])
                     ->setPrice($faker->randomNumber(3, true))
@@ -41,7 +54,7 @@ class AppFixtures extends Fixture
                    ->setPhoneNumber($faker->phoneNumber());
             $manager->persist($company);
 
-            for ($k = 0; $k < 10; $k++) { 
+            for ($k = 0; $k < 50; $k++) { 
                 $user = new Customer();
                 $user->setFirstname($faker->firstname())
                      ->setLastname($faker->lastname())
