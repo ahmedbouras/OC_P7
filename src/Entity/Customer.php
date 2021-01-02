@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
 use Hateoas\Configuration\Annotation as Hateoas;
 use Symfony\Component\Validator\Constraints as Assert;
+use OpenApi\Annotations as OA;
 
 /**
  * @ORM\Entity(repositoryClass=CustomerRepository::class)
@@ -33,6 +34,7 @@ class Customer
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * @Serializer\Expose
+     * @OA\Property(description="The unique identifier of the customer.")
      */
     private $id;
 
@@ -47,6 +49,7 @@ class Customer
      *      maxMessage = "Le prénom doit comporter au maximum {{ limit }} caractères"
      * )
      * @Serializer\Expose
+     * @OA\Property(type="string", maxLength=255)
      */
     private $firstname;
 
@@ -61,6 +64,7 @@ class Customer
      *      maxMessage = "Le nom doit comporter au maximum {{ limit }} caractères"
      * )
      * @Serializer\Expose
+     * @OA\Property(type="string", maxLength=255)
      */
     private $lastname;
 
@@ -70,6 +74,7 @@ class Customer
      * @Assert\NotBlank(message="Ce champ ne doit pas être vide.")
      * @Assert\Email(message="Veuillez insérer un email valide")
      * @Serializer\Expose
+     * @OA\Property(type="string", maxLength=255)
      */
     private $email;
 

@@ -24,24 +24,14 @@ class ProductController extends AbstractFOSRestController
      * @Rest\QueryParam(
      *      name="page",
      *      requirements="\d+",
-     *      default="1"
-     * )
-     * @OA\Parameter(
-     *     name="page",
-     *     in="query",
-     *     description="The page's number.",
-     *     @OA\Schema(type="int")
+     *      default="1",
+     *      description="The page's number."
      * )
      * @Rest\QueryParam(
      *      name="limit",
      *      requirements="\d+",
-     *      default="10"
-     * )
-     * @OA\Parameter(
-     *     name="limit",
-     *     in="query",
-     *     description="Limit of items per page.",
-     *     @OA\Schema(type="int")
+     *      default="10",
+     *      description="Limit of items per page."
      * )
      * @Rest\QueryParam(
      *      name="order",
@@ -49,6 +39,8 @@ class ProductController extends AbstractFOSRestController
      *      default="asc",
      *      description="Sort order (asc or desc)"
      * )
+     * @OA\Tag(name="Products")
+     * @Security(name="Bearer")
      * @OA\Response(
      *     response=200,
      *     description="Return the products' list of BileMo",
@@ -58,8 +50,10 @@ class ProductController extends AbstractFOSRestController
      *     response=401,
      *     description="JWT Token not found | Invalid JWT Token | Expired JWT Token"
      * )
-     * @OA\Tag(name="Products")
-     * @Security(name="Bearer")
+     * @OA\Response(
+     *     response=404,
+     *     description="Route not found"
+     * )
      * @Rest\View(statusCode=200)
      */
     public function listAction(ParamFetcherInterface $paramFetcher, ProductRepository $productRepository)
@@ -79,17 +73,21 @@ class ProductController extends AbstractFOSRestController
      *      name="show_product",
      *      requirements={"id"="\d+"}
      * )
+     * @OA\Tag(name="Products")
+     * @Security(name="Bearer")
      * @OA\Response(
      *     response=200,
-     *     description="Return a specific product thanks to its id",
+     *     description="Return product's details",
      *     @Model(type=Product::class)
      * )
      * @OA\Response(
      *     response=401,
      *     description="JWT Token not found | Invalid JWT Token | Expired JWT Token"
      * )
-     * @OA\Tag(name="Products")
-     * @Security(name="Bearer")
+     * @OA\Response(
+     *     response=404,
+     *     description="Route not found | Invalid id"
+     * )
      * @Rest\View(statusCode=200)
      */
     public function showAction(Product $product)
