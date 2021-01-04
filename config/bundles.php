@@ -11,4 +11,5 @@ return [
     JMS\SerializerBundle\JMSSerializerBundle::class => ['all' => true],
     Bazinga\Bundle\HateoasBundle\BazingaHateoasBundle::class => ['all' => true],
     Symfony\Bundle\TwigBundle\TwigBundle::class => ['all' => true],
+    BabDev\PagerfantaBundle\BabDevPagerfantaBundle::class => ['all' => true],
 ];

@@ -2,9 +2,10 @@
 
 namespace App\Repository;
 
+use App\Repository\AbstractRepository;
 use App\Entity\Product;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method Product|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,9 +15,20 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ProductRepository extends ServiceEntityRepository
 {
+    use AbstractRepository;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Product::class);
+    }
+
+    public function search($page, $limit, $order)
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->select('p')
+            ->orderBy('p.id', $order);
+
+        return $this->paginate($qb, $page, $limit);
     }
 
     // /**
