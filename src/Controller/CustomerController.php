@@ -56,7 +56,7 @@ class CustomerController extends AbstractFOSRestController
      * )
      * @OA\Response(
      *     response=200,
-     *     description="Return the customers' list of BileMo",
+     *     description="Return a detailed customers list",
      *     @Model(type=Customer::class)
      * )
      * @OA\Response(
@@ -91,7 +91,7 @@ class CustomerController extends AbstractFOSRestController
      * @Security(name="Bearer")
      * @OA\Response(
      *     response=200,
-     *     description="Return the customer's details",
+     *     description="Return customer's details",
      *     @Model(type=Customer::class)
      * )
      * @OA\Response(
@@ -150,9 +150,18 @@ class CustomerController extends AbstractFOSRestController
      * )
      * @OA\Tag(name="Customer")
      * @Security(name="Bearer")
+     * @OA\RequestBody(
+     *      required=true,
+     *      @OA\JsonContent(
+     *          @OA\Property(type="string", property="firstname"),
+     *          @OA\Property(type="string", property="lastname"),
+     *          @OA\Property(type="string", property="email"),
+     *          required={"firstname", "lastname", "email"}
+     *      )
+     * )
      * @OA\Response(
      *     response=201,
-     *     description="Return the customer's details created",
+     *     description="Return customer's details created",
      *     @Model(type=Customer::class)
      * )
      * @OA\Response(

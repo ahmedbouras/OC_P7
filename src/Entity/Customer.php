@@ -26,6 +26,7 @@ use OpenApi\Annotations as OA;
  *          parameters = { "id" = "expr(object.getId())", "companyId" = "expr(object.getCompany().id)" }
  *      )
  * )
+ * @OA\Schema()
  */
 class Customer
 {
@@ -34,7 +35,7 @@ class Customer
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * @Serializer\Expose
-     * @OA\Property(description="The unique identifier of the customer.")
+     * @OA\Property(type="integer")
      */
     private $id;
 
