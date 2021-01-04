@@ -6,6 +6,7 @@ use App\Repository\ProductRepository;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
 use Hateoas\Configuration\Annotation as Hateoas;
+use OpenApi\Annotations as OA;
 
 /**
  * @ORM\Entity(repositoryClass=ProductRepository::class)
@@ -24,12 +25,14 @@ class Product
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * @Serializer\Expose
+     * @OA\Property(description="The unique identifier of the product.")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Serializer\Expose
+     * @OA\Property(type="string", maxLength=255)
      */
     private $brand;
 
