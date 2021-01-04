@@ -6,6 +6,7 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
 use Hateoas\Configuration\Annotation as Hateoas;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
@@ -37,18 +38,37 @@ class User
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotNull(message="Ce champ ne doit pas être null.")
+     * @Assert\NotBlank(message="Ce champ ne doit pas être vide.")
+     * @Assert\Length(
+     *      min = 2,
+     *      max = 20,
+     *      minMessage = "Le prénom doit comporter au minimum {{ limit }} caractères",
+     *      maxMessage = "Le prénom doit comporter au maximum {{ limit }} caractères"
+     * )
      * @Serializer\Expose
      */
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotNull(message="Ce champ ne doit pas être null.")
+     * @Assert\NotBlank(message="Ce champ ne doit pas être vide.")
+     * @Assert\Length(
+     *      min = 2,
+     *      max = 20,
+     *      minMessage = "Le nom doit comporter au minimum {{ limit }} caractères",
+     *      maxMessage = "Le nom doit comporter au maximum {{ limit }} caractères"
+     * )
      * @Serializer\Expose
      */
     private $lastName;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotNull(message="Ce champ ne doit pas être null.")
+     * @Assert\NotBlank(message="Ce champ ne doit pas être vide.")
+     * @Assert\Email(message="Votre email n'est pas valide.")
      * @Serializer\Expose
      */
     private $email;
