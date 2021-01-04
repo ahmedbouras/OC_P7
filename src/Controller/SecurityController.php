@@ -13,6 +13,7 @@ use FOS\RestBundle\Controller\AbstractFOSRestController;
 class SecurityController extends AbstractFOSRestController
 {
     /**
+     * Get a token to access to all endpoints
      * @Rest\Post("/login_check", name="login")
      * @OA\Tag(name="Authentication")
      * @OA\RequestBody(
@@ -25,7 +26,10 @@ class SecurityController extends AbstractFOSRestController
      * )
      * @OA\Response(
      *     response=200,
-     *     description="{""token"": ""a jwt token""}" 
+     *     description="return a token",
+     *      @OA\JsonContent(
+     *          @OA\Property(type="string", property="token")
+     *      )
      * )
      * @OA\Response(
      *     response=400,
