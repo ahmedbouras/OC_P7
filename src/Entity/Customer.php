@@ -2,31 +2,31 @@
 
 namespace App\Entity;
 
-use App\Repository\UserRepository;
+use App\Repository\CustomerRepository;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
 use Hateoas\Configuration\Annotation as Hateoas;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass=UserRepository::class)
+ * @ORM\Entity(repositoryClass=CustomerRepository::class)
  * @Serializer\ExclusionPolicy("ALL")
  * @Hateoas\Relation(
  *      "self",
  *      href = @Hateoas\Route(
- *          "show_user",
- *          parameters = { "id" = "expr(object.getId())", "clientId" = "expr(object.getClient().id)" }
+ *          "api_show_customer",
+ *          parameters = { "id" = "expr(object.getId())", "companyId" = "expr(object.getCompany().id)" }
  *      )
  * )
  * @Hateoas\Relation(
  *      "delete",
  *      href = @Hateoas\Route(
- *          "delete_user",
- *          parameters = { "id" = "expr(object.getId())", "clientId" = "expr(object.getClient().id)" }
+ *          "api_delete_customer",
+ *          parameters = { "id" = "expr(object.getId())", "companyId" = "expr(object.getCompany().id)" }
  *      )
  * )
  */
-class User
+class Customer
 {
     /**
      * @ORM\Id
@@ -48,7 +48,7 @@ class User
      * )
      * @Serializer\Expose
      */
-    private $firstName;
+    private $firstname;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -62,48 +62,47 @@ class User
      * )
      * @Serializer\Expose
      */
-    private $lastName;
+    private $lastname;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotNull(message="Ce champ ne doit pas être null.")
      * @Assert\NotBlank(message="Ce champ ne doit pas être vide.")
-     * @Assert\Email(message="Votre email n'est pas valide.")
+     * @Assert\Email(message="Veuillez insérer un email valide")
      * @Serializer\Expose
      */
     private $email;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Client::class, inversedBy="users")
-     * @ORM\JoinColumn(nullable=true)
+     * @ORM\ManyToOne(targetEntity=Company::class, inversedBy="customers")
      */
-    private $client;
+    private $company;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getFirstName(): ?string
+    public function getFirstname(): ?string
     {
-        return $this->firstName;
+        return $this->firstname;
     }
 
-    public function setFirstName(string $firstName): self
+    public function setFirstname(string $firstname): self
     {
-        $this->firstName = $firstName;
+        $this->firstname = $firstname;
 
         return $this;
     }
 
-    public function getLastName(): ?string
+    public function getLastname(): ?string
     {
-        return $this->lastName;
+        return $this->lastname;
     }
 
-    public function setLastName(string $lastName): self
+    public function setLastname(string $lastname): self
     {
-        $this->lastName = $lastName;
+        $this->lastname = $lastname;
 
         return $this;
     }
@@ -120,14 +119,14 @@ class User
         return $this;
     }
 
-    public function getClient(): ?Client
+    public function getCompany(): ?Company
     {
-        return $this->client;
+        return $this->company;
     }
 
-    public function setClient(?Client $client): self
+    public function setCompany(?Company $company): self
     {
-        $this->client = $client;
+        $this->company = $company;
 
         return $this;
     }

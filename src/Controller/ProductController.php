@@ -8,7 +8,11 @@ use App\Representation\Entities;
 use FOS\RestBundle\Request\ParamFetcherInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
+use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @Route("/api", name="api_")
+ */
 class ProductController extends AbstractFOSRestController
 {
     /**

@@ -2,21 +2,41 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Client;
+use App\Entity\Company;
 use App\Entity\Product;
-use App\Entity\User;
+use App\Entity\Customer;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class AppFixtures extends Fixture
 {
-    private $brands = ['iphone', 'samsung', 'huawei', 'oppo', 'xiaomi', 'oneplus'];
+    private $brands = [
+        'iphone', 
+        'samsung', 
+        'huawei', 
+        'oppo', 
+        'xiaomi', 
+        'oneplus', 
+        'lg', 
+        'htc', 
+        'motorola', 
+        'windows phone',
+        'nokia',
+        'lenovo'
+    ];
+    private $encoder;
+
+    public function __construct(UserPasswordEncoderInterface $encoder)
+    {
+        $this->encoder = $encoder;
+    }
 
     public function load(ObjectManager $manager)
     {
         $faker = \Faker\Factory::create('fr_FR');
         
-        for ($i = 0; $i < 6; $i++) { 
+        for ($i = 0; $i < count($this->brands); $i++) { 
             $product = new Product();
             $product->setBrand($this->brands[$i])
                     ->setPrice($faker->randomNumber(3, true))
@@ -25,20 +45,21 @@ class AppFixtures extends Fixture
         }
 
         for ($j = 0; $j < 5; $j++) { 
-            $client = new Client();
-            $client->setName($faker->company())
+            $company = new Company();
+            $company->setEmail($faker->safeEmail())
+                   ->setPassword($this->encoder->encodePassword($company, 'pass123'))
+                   ->setName($faker->company())
                    ->setSiret($faker->siret())
                    ->setStreetAddress($faker->streetAddress())
-                   ->setEmail($faker->safeEmail())
                    ->setPhoneNumber($faker->phoneNumber());
-            $manager->persist($client);
+            $manager->persist($company);
 
-            for ($k = 0; $k < 10; $k++) { 
-                $user = new User();
-                $user->setFirstName($faker->firstname())
-                     ->setLastName($faker->lastname())
+            for ($k = 0; $k < 50; $k++) { 
+                $user = new Customer();
+                $user->setFirstname($faker->firstname())
+                     ->setLastname($faker->lastname())
                      ->setEmail($faker->safeEmail())
-                     ->setClient($client);
+                     ->setCompany($company);
                 $manager->persist($user);
             }
         }

@@ -2,20 +2,24 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
+use App\Entity\Customer;
 use App\Representation\Entities;
-use App\Repository\UserRepository;
-use App\Repository\ClientRepository;
+use App\Repository\CustomerRepository;
+use App\Repository\CompanyRepository;
 use FOS\RestBundle\Request\ParamFetcherInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Component\Routing\Annotation\Route;
 
-class UserController extends AbstractFOSRestController
+/**
+ * @Route("/api", name="api_")
+ */
+class CustomerController extends AbstractFOSRestController
 {
     /**
-     * @Rest\Get("/clients/{clientId}/users", name="list_users", requirements={"clientId"="\d+"})
+     * @Rest\Get("/companies/{companyId}/customers", name="list_customers", requirements={"companyId"="\d+"})
      * @Rest\QueryParam(
      *      name="page",
      *      requirements="\d+",
@@ -36,77 +40,75 @@ class UserController extends AbstractFOSRestController
      * )
      * @Rest\View(statusCode=200)
      */
-    public function listAction(ParamFetcherInterface $paramFetcher, UserRepository $userRepository, $clientId)
+    public function listAction(ParamFetcherInterface $paramFetcher, CustomerRepository $customerRepository, $companyId)
     {
-        $pager = $userRepository->search(
+        $pager = $customerRepository->search(
             $paramFetcher->get('page'),
             $paramFetcher->get('limit'),
             $paramFetcher->get('order'),
-            $clientId
+            $companyId
         );
         return new Entities($pager);
-        // $users = $userRepository->findBy(['client' => $clientId]);
-        // return $users;
     }
 
     /**
      * @Rest\Get(
-     *      path="/clients/{clientId}/users/{id}",
-     *      name="show_user",
-     *      requirements={"clientId"="\d+", "id"="\d+"}
+     *      path="/companies/{companyId}/customers/{id}",
+     *      name="show_customer",
+     *      requirements={"companyId"="\d+", "id"="\d+"}
      * )
      * @Rest\View(statusCode=200)
      */
-    public function showAction(UserRepository $userRepository, $clientId, $id)
+    public function showAction(CustomerRepository $customerRepository, $companyId, $id)
     {
-        $user = $userRepository->findOneBy(['client' => $clientId, 'id' => $id]);
-        return $user;
+        $customer = $customerRepository->findOneBy(['company' => $companyId, 'id' => $id]);
+        return $customer;
     }
 
     /**
      * @Rest\Delete(
-     *      path="/clients/{clientId}/users/{id}",
-     *      name="delete_user",
-     *      requirements={"clientId"="\d+", "id"="\d+"}
+     *      path="/companies/{companyId}/customers/{id}",
+     *      name="delete_customer",
+     *      requirements={"companyId"="\d+", "id"="\d+"}
      * )
      * @Rest\View(statusCode=204)
      */
-    public function deleteAction(UserRepository $userRepository, $clientId, $id)
+    public function deleteAction(CustomerRepository $customerRepository, $companyId, $id)
     {
-        $user = $userRepository->findOneBy(['client' => $clientId,'id' => $id]);
+        $customer = $customerRepository->findOneBy(['company' => $companyId,'id' => $id]);
         $em = $this->getDoctrine()->getManager();
-        $em->remove($user);
+        $em->remove($customer);
         $em->flush();
     }
 
     /**
      * @Rest\Post(
-     *      path="/clients/{id}/users",
-     *      name="create_user",
+     *      path="/companies/{id}/customers",
+     *      name="create_customer",
      *      requirements={"id"="\d+"}
      * )
      * @Rest\View(statusCode=201)
-     * @ParamConverter("user", converter="fos_rest.request_body")
+     * @ParamConverter("customer", converter="fos_rest.request_body")
      */
     public function createAction(
-        User $user, ClientRepository $clientRepository, $id,
+        Customer $customer, CompanyRepository $companyRepository, $id,
         ConstraintViolationListInterface $validationErrors
     )
     {
         if (count($validationErrors) > 0) {
             return $this->view($validationErrors, 404);
         } else {
-            $client = $clientRepository->findOneBy(['id' => $id]);
+            $company = $companyRepository->findOneBy(['id' => $id]);
             
-            if ($client) {
-                $user->setClient($client);
+            if ($company) {
+                $customer->setCompany($company);
 
                 try {
                     $em = $this->getDoctrine()->getManager();
-                    $em->persist($user);
+                    $em->persist($customer);
                     $em->flush();
 
-                    return $user;
+                    return $customer;
                 } catch (\Exception $e) {
                     return $this->view('Erreur bdd', 400);
                 }
