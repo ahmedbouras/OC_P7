@@ -13,6 +13,7 @@ use Nelmio\ApiDocBundle\Annotation\Model;
 use Nelmio\ApiDocBundle\Annotation\Security;
 use OpenApi\Annotations as OA;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * @Route("/api", name="api_")
@@ -52,10 +53,6 @@ class ProductController extends AbstractFOSRestController
      *     response=401,
      *     description="JWT Token not found | Invalid JWT Token | Expired JWT Token"
      * )
-     * @OA\Response(
-     *     response=404,
-     *     description="Route not found"
-     * )
      * @Rest\View(statusCode=200)
      */
     public function listAction(ParamFetcherInterface $paramFetcher, ProductRepository $productRepository)
@@ -87,13 +84,20 @@ class ProductController extends AbstractFOSRestController
      *     description="JWT Token not found | Invalid JWT Token | Expired JWT Token"
      * )
      * @OA\Response(
+     *     response=400,
+     *     description="Non existent product"
+     * )
+     * @OA\Response(
      *     response=404,
-     *     description="Route not found | Invalid id"
+     *     description="Route not found or invalid id"
      * )
      * @Rest\View(statusCode=200)
      */
-    public function showAction(Product $product)
+    public function showAction(ProductRepository $productRepository, $id)
     {
-        return $product;
+        if ($product = $productRepository->findOneBy(['id' => $id])) {
+            return $product;
+        }
+        return new JsonResponse('Non existent product', 400);
     }
 }

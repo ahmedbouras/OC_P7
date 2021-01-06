@@ -16,6 +16,7 @@ use Nelmio\ApiDocBundle\Annotation\Model;
 use Nelmio\ApiDocBundle\Annotation\Security;
 use OpenApi\Annotations as OA;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * @Route("/api", name="api_")
@@ -61,12 +62,16 @@ class CustomerController extends AbstractFOSRestController
      *     @Model(type=Customer::class)
      * )
      * @OA\Response(
+     *     response=400,
+     *     description="Non existent company"
+     * )
+     * @OA\Response(
      *     response=401,
      *     description="JWT Token not found | Invalid JWT Token | Expired JWT Token"
      * )
      * @OA\Response(
      *     response=404,
-     *     description="Route not found | Invalid id"
+     *     description="Route not found or invalid id"
      * )
      * @Rest\View(statusCode=200)
      * @Cache(maxage="3600", public=true)
@@ -79,7 +84,10 @@ class CustomerController extends AbstractFOSRestController
             $paramFetcher->get('order'),
             $companyId
         );
-        return new Entities($pager);
+        if (count($pager) > 0) {
+            return new Entities($pager);
+        }
+        return new JsonResponse('Non existent company', 400);
     }
 
     /**
@@ -97,12 +105,16 @@ class CustomerController extends AbstractFOSRestController
      *     @Model(type=Customer::class)
      * )
      * @OA\Response(
+     *     response=400,
+     *     description="Non existent company or customer"
+     * )
+     * @OA\Response(
      *     response=401,
      *     description="JWT Token not found | Invalid JWT Token | Expired JWT Token"
      * )
      * @OA\Response(
      *     response=404,
-     *     description="Route not found | Invalid id"
+     *     description="Route not found or invalid id"
      * )
      * @Rest\View(statusCode=200)
      * @Cache(maxage="3600", public=true)
@@ -110,6 +122,9 @@ class CustomerController extends AbstractFOSRestController
     public function showAction(CustomerRepository $customerRepository, $companyId, $id)
     {
         $customer = $customerRepository->findOneBy(['company' => $companyId, 'id' => $id]);
+        if (!$customer) {
+            return new JsonResponse('Non existent company or customer', 400);
+        }
         return $customer;
     }
 
@@ -127,18 +142,25 @@ class CustomerController extends AbstractFOSRestController
      *     description=""
      * )
      * @OA\Response(
+     *     response=400,
+     *     description="Invalid company or customer id"
+     * )
+     * @OA\Response(
      *     response=401,
      *     description="JWT Token not found | Invalid JWT Token | Expired JWT Token"
      * )
      * @OA\Response(
      *     response=404,
-     *     description="Route not found | Invalid id"
+     *     description="Route not found or invalid id"
      * )
      * @Rest\View(statusCode=204)
      */
     public function deleteAction(CustomerRepository $customerRepository, $companyId, $id)
     {
-        $customer = $customerRepository->findOneBy(['company' => $companyId,'id' => $id]);
+        $customer = $customerRepository->findOneBy(['company' => $companyId, 'id' => $id]);
+        if (!$customer) {
+            return new JsonResponse('Invalid company or customer id', 400);
+        }
         $em = $this->getDoctrine()->getManager();
         $em->remove($customer);
         $em->flush();
@@ -169,7 +191,7 @@ class CustomerController extends AbstractFOSRestController
      * )
      * @OA\Response(
      *     response=400,
-     *     description="{""property_path"": ""field name"", ""message"": ""error message""}"     
+     *     description="{""property_path"": ""field name"", ""message"": ""error message""} | Non existant company"     
      * )
      * @OA\Response(
      *     response=401,
@@ -177,11 +199,11 @@ class CustomerController extends AbstractFOSRestController
      * )
      * @OA\Response(
      *     response=404,
-     *     description="Route not found | Invalid id"
+     *     description="Route not found or invalid id"
      * )
      * @OA\Response(
-     *     response=415,
-     *     description="The query is not in json type"
+     *     response=500,
+     *     description="Server error during the creation"
      * )
      * @Rest\View(statusCode=201)
      * @ParamConverter("customer", converter="fos_rest.request_body")
@@ -206,10 +228,10 @@ class CustomerController extends AbstractFOSRestController
 
                     return $customer;
                 } catch (\Exception $e) {
-                    return $this->view('Erreur bdd', 400);
+                    return $this->view('Server error during the creation', 500);
                 }
             } else {
-                return $this->view('client inconnu', 404);
+                return $this->view('Non existant company', 400);
             }
         }
     }

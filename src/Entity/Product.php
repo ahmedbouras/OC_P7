@@ -25,7 +25,6 @@ class Product
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * @Serializer\Expose
-     * @OA\Property(description="The unique identifier of the product.")
      */
     private $id;
 
