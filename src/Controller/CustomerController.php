@@ -143,7 +143,7 @@ class CustomerController extends AbstractFOSRestController
      * )
      * @OA\Response(
      *     response=400,
-     *     description="Invalid company or customer id"
+     *     description="Non existant company or customer"
      * )
      * @OA\Response(
      *     response=401,
