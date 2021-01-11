@@ -12,9 +12,11 @@ use Symfony\Component\Routing\Annotation\Route;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Nelmio\ApiDocBundle\Annotation\Security;
 use OpenApi\Annotations as OA;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 
 /**
  * @Route("/api", name="api_")
+ * @Cache(maxage="3600", public=true)
  */
 class ProductController extends AbstractFOSRestController
 {

@@ -15,6 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Nelmio\ApiDocBundle\Annotation\Security;
 use OpenApi\Annotations as OA;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 
 /**
  * @Route("/api", name="api_")
@@ -68,6 +69,7 @@ class CustomerController extends AbstractFOSRestController
      *     description="Route not found | Invalid id"
      * )
      * @Rest\View(statusCode=200)
+     * @Cache(maxage="3600", public=true)
      */
     public function listAction(ParamFetcherInterface $paramFetcher, CustomerRepository $customerRepository, $companyId)
     {
@@ -103,6 +105,7 @@ class CustomerController extends AbstractFOSRestController
      *     description="Route not found | Invalid id"
      * )
      * @Rest\View(statusCode=200)
+     * @Cache(maxage="3600", public=true)
      */
     public function showAction(CustomerRepository $customerRepository, $companyId, $id)
     {
